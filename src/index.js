@@ -14,12 +14,19 @@ app.get('/', (req, res) => {
 });
 
 io.on("connection", socket => {
-    socket.on('posY',(posY) => {
-        socket.broadcast.emit('posY',posY);
+    socket.connectedRoom = "";
+
+    socket.on('connectRoom',(roomName)=> {
+        socket.leave(socket.connectedRoom);
+        socket.join(roomName);
+        socket.connectedRoom = roomName;
     });
-    
-    socket.on('posX',(posX) => {
-        socket.broadcast.emit('posX',posX);
+
+    socket.on('message',(msg) => {
+        io.to(socket.connectedRoom).emit('message',{
+            msg,
+            room:socket.connectedRoom,
+        });
     });
 });
 

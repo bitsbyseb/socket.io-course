@@ -1,27 +1,23 @@
 const socket = io();
-const circle = document.getElementById('circle');
+const buttons = document.getElementById('buttons');
 
-function drag(e) {
-    const posX = e.clientX;
-    const posY = e.clientY;
-    circle.style.top = posY +"px";
-    circle.style.left = posX +"px";
-
-    socket.emit('posX',posX);
-    socket.emit('posY',posY);
-}
-
-socket.on('posY',(Y) => {
-    circle.style.top = Y +"px";
-});
-socket.on('posX',(X) => {
-    circle.style.left = X +"px";
+buttons.addEventListener('click',(e) => {
+    if (e.target.id !== undefined) {
+        socket.emit('connectRoom',e.target.id);
+    }
 });
 
-document.addEventListener('mousedown',e => {
-    document.addEventListener('mousemove',drag);
+// send a message
+const sendMessage = document.getElementById('sendMessage');
+sendMessage.addEventListener('click',() => {
+    const msg = prompt("write your message");
+    socket.emit("message",msg);
 });
 
-document.addEventListener('mouseup',() => {
-    document.removeEventListener('mousemove',drag);
+socket.on('message',data => {
+    const {msg,room} = data;
+    const ulToWrite = document.querySelector(`#${room}Container`);
+    const liEl = document.createElement('li');
+    liEl.textContent = msg;
+    ulToWrite?.append(liEl);
 });

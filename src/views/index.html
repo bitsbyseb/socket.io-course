@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="./css/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <ul class="room" id="room1Container"></ul>
+    <ul class="room" id="room2Container"></ul>
+    <ul class="room" id="room3Container"></ul>
 
-    <div id="circle">
-
+    <div id="buttons">
+      <button id="room1">Room1</button>
+      <button id="room2">Room2</button>
+      <button id="room3">Room3</button>
     </div>
 
+    <button id="sendMessage">Send A Message</button>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/index.js"></script>
-</body>
+  </body>
 </html>
