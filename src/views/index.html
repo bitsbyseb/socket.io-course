@@ -7,17 +7,15 @@
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-    <ul class="room" id="room1Container"></ul>
-    <ul class="room" id="room2Container"></ul>
-    <ul class="room" id="room3Container"></ul>
 
-    <div id="buttons">
-      <button id="room1">Room1</button>
-      <button id="room2">Room2</button>
-      <button id="room3">Room3</button>
-    </div>
+    <h2>Chat De <span id="namespace"></span></h2>
 
-    <button id="sendMessage">Send A Message</button>
+    <ul id="chat">
+      
+    </ul>
+    <button id="sendMessage">
+      Send A Message
+    </button>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/index.js"></script>
   </body>

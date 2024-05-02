@@ -13,21 +13,15 @@ app.get('/', (req, res) => {
     res.sendFile(join(import.meta.dirname, "views", "index.html"))
 });
 
-io.on("connection", socket => {
-    socket.connectedRoom = "";
+const teachers = io.of('teachers');
+const students = io.of('students');
 
-    socket.on('connectRoom',(roomName)=> {
-        socket.leave(socket.connectedRoom);
-        socket.join(roomName);
-        socket.connectedRoom = roomName;
-    });
+teachers.on('connection',socket => {
+    console.log(socket.id + " is a teacher");
+});
 
-    socket.on('message',(msg) => {
-        io.to(socket.connectedRoom).emit('message',{
-            msg,
-            room:socket.connectedRoom,
-        });
-    });
+students.on('connection',socket => {
+    console.log(socket.id + " is a student");
 });
 
 httpServer.listen(3000, '127.0.0.1', () => {

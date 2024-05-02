@@ -1,23 +1,21 @@
-const socket = io();
-const buttons = document.getElementById('buttons');
+const chat = document.getElementById('chat');
+const namespaceTitle = document.getElementById('namespace');
+const sendMessageButton = document.getElementById('sendMessage');
 
-buttons.addEventListener('click',(e) => {
-    if (e.target.id !== undefined) {
-        socket.emit('connectRoom',e.target.id);
-    }
-});
 
-// send a message
-const sendMessage = document.getElementById('sendMessage');
-sendMessage.addEventListener('click',() => {
-    const msg = prompt("write your message");
-    socket.emit("message",msg);
-});
+const user = prompt("write your username");
+const teachers = ["Sebastian", "GNDX", "JuanDC", "RetaxMaster"];
 
-socket.on('message',data => {
-    const {msg,room} = data;
-    const ulToWrite = document.querySelector(`#${room}Container`);
-    const liEl = document.createElement('li');
-    liEl.textContent = msg;
-    ulToWrite?.append(liEl);
-});
+let socketNamespace, group;
+
+if (teachers.includes(user)) {
+    socketNamespace = io("/teachers");
+    group = "teachers";
+} else {
+    socketNamespace = io("/students");
+    group = "students";
+}
+
+socketNamespace.on("connect",() => {
+    namespaceTitle.textContent = group;
+})
