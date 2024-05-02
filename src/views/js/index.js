@@ -1,52 +1,27 @@
-// its not necessary that you create a new variable with
-// htmlNode, when you create a new element with id selector,
-// the browser create a new global var
 const socket = io();
-const emitToLast = document.getElementById('emit-to-last');
-socket.on('everyone',msg => text.textContent = msg);
+const circle = document.getElementById('circle');
 
-socket.on('disconnect',()=> {
-    console.log("the next socket have been disconnected",socket.id);
+function drag(e) {
+    const posX = e.clientX;
+    const posY = e.clientY;
+    circle.style.top = posY +"px";
+    circle.style.left = posX +"px";
+
+    socket.emit('posX',posX);
+    socket.emit('posY',posY);
+}
+
+socket.on('posY',(Y) => {
+    circle.style.top = Y +"px";
+});
+socket.on('posX',(X) => {
+    circle.style.left = X +"px";
 });
 
-socket.on('connect_error',()=> {
-    console.log("%ci cannot reconnect❌😔","color:white;font-family:system-ui;font-size:2rem;font-weight:bold;");
+document.addEventListener('mousedown',e => {
+    document.addEventListener('mousemove',drag);
 });
 
-socket.on('welcome',msg => text.textContent = msg);
-
-socket.io.on('reconnect',()=> {
-    console.log("%cim back!!✅😀","color:green;font-family:system-ui;font-size:2rem;font-weight:bold;");
+document.addEventListener('mouseup',() => {
+    document.removeEventListener('mousemove',drag);
 });
-
-socket.io.on('reconnect_attempt',()=> {
-    console.log("%cim trying to reconnect🧠❔","color:gray;font-family:system-ui;font-size:2rem;font-weight:bold;");
-});
-
-emitToLast.addEventListener('click',(e) => {
-    e.preventDefault();
-    socket.emit("last","hello from "+socket.id);
-});
-
-socket.on('greeting',(msg)=> {
-    text.textContent = msg;
-});
-
-// on,once,off
-socket.on('on',(_) => {
-    console.log("an event that is emitted many times");
-});
-
-socket.once('once',() => {
-    console.log("there are 2 events but this message gonna appear one time");
-});
-
-const listener = () => {
-    console.log("the event turn off");
-};
-
-socket.on('off',listener);
-
-setTimeout(() => {
-    socket.off('off',listener);
-}, 2000);
