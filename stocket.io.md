@@ -205,3 +205,6 @@ io.on("connection", (socket) => {
 
 });
 ```
+
+# Eventos Volatiles
+👀 ✍️ Básicamente los eventos volátiles son eventos que no se envían al servidor si no hay conexión. A diferencia de los eventos normales que se almacenan en un buffer cuando no hay conexión y se envían de golpe al servidor una vez se restablece la conexión. ¿Cuando usar uno u otro? Hay que tener en cuenta en que escenarios usar uno u otro. Si los mensajes que emitimos no son importante almacenarlos y solo necesitamos el último mensaje emitido, los eventos volátiles son los que deberiamos usar. Pero si por el contrario, necesitamos recibir todos los eventos que emite el cliente incluyendo los que emitió cuando no tuvo conexión, entonces debemos usar los eventos normales que se almacenan en el buffer del socket.
