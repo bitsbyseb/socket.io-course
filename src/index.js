@@ -13,22 +13,10 @@ app.get('/', (req, res) => {
     res.sendFile(join(import.meta.dirname, "views", "index.html"))
 });
 
-const teachers = io.of('teachers');
-const students = io.of('students');
-
-teachers.on('connection',socket => {
-    console.log(socket.id + " is a teacher");
-
-    socket.on('sendMessage',(data) => {
-        teachers.emit("sendMessage",data);
-    });
-});
-
-students.on('connection',socket => {
-    console.log(socket.id + " is a student");
-
-    socket.on('sendMessage',data => {
-        students.emit("sendMessage",data);
+io.on('connection',socket => {
+    console.log("new socket from "+socket.id);
+    socket.on("send",(msg) => {
+        console.log(msg);
     });
 });
 
