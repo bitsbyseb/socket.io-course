@@ -13,11 +13,23 @@ app.get('/', (req, res) => {
     res.sendFile(join(import.meta.dirname, "views", "index.html"))
 });
 
+// middleware error type
+io.use((socket,next) => {
+    const token = socket.handshake.auth.token;
+    
+    if (token == "mortarion") {
+        next();
+    } else {
+        const err = new Error("you're not allowed");
+        err.data = {
+            details:"you couldn't be authenticated by our service"
+        };
+        next(err);
+    }
+});
+
 io.on('connection',socket => {
-    console.log("new socket from "+socket.id);
-    socket.on("send",(msg) => {
-        console.log(msg);
-    });
+    console.log(socket.id+" is an authenticated user");
 });
 
 httpServer.listen(3000, '127.0.0.1', () => {

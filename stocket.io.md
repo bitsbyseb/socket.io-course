@@ -123,7 +123,7 @@ socket.emit("question", (answer) => {_..._}); → Con reconocimiento.
 
 ```
 
-* Con timeout cuando el receptor no recibió el evento en el tiempo esperado.
+- Con timeout cuando el receptor no recibió el evento en el tiempo esperado.
 
 ```javascript
 socket.timeout(5000).emit("my-event", (err) => {
@@ -147,6 +147,7 @@ io.emit(/_ .. _/) → A todos los clientes conectados.
 ```
 
 ## Eventos del cliente
+
 ```javascript
 socket.emit(/_ .. _/) → Emisión básica.
 socket.emit("question", (answer) => {_..._}); → Con reconocimiento.
@@ -156,9 +157,9 @@ Con timeout cuando el receptor no recibió el evento en el tiempo esperado.
 ```
 
 # Emit cheatseet
+
 ```javascript
 io.on("connection", (socket) => {
-
   // basic emit
   socket.emit(/* ... */);
 
@@ -202,9 +203,35 @@ io.on("connection", (socket) => {
 
   // a message that might be dropped if the low-level transport is not writable
   socket.volatile.emit(/* ... */);
-
 });
 ```
 
 # Eventos Volatiles
+
 👀 ✍️ Básicamente los eventos volátiles son eventos que no se envían al servidor si no hay conexión. A diferencia de los eventos normales que se almacenan en un buffer cuando no hay conexión y se envían de golpe al servidor una vez se restablece la conexión. ¿Cuando usar uno u otro? Hay que tener en cuenta en que escenarios usar uno u otro. Si los mensajes que emitimos no son importante almacenarlos y solo necesitamos el último mensaje emitido, los eventos volátiles son los que deberiamos usar. Pero si por el contrario, necesitamos recibir todos los eventos que emite el cliente incluyendo los que emitió cuando no tuvo conexión, entonces debemos usar los eventos normales que se almacenan en el buffer del socket.
+
+# Manejo de middlewares
+
+```
+💡 Middleware → Es un fragmento de código que se ejecuta antes de conectarnos a nuestro servidor de socket io.
+```
+
+Por ejemplo, podríamos ejecutar cierto código para validar si estamos autorizados (o no) a conectarnos al chat de administradores.
+
+Básicamente, en un middleware podríamos aplicar alguna lógica de negocio antes de conectarnos a un socket.
+
+Ejemplo:
+
+```javascript
+  io.use((socket, next) => {
+  // Tu lógica de negocio
+  if (// todo OK
+  ) {
+    next();
+  } else {
+    const error = new Error('Un error')
+    error.data = { details: 'Info del error' };
+    next(error);
+  }
+);
+```
